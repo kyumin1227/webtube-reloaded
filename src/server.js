@@ -9,43 +9,37 @@ const logger = (req, res, next) => {
   next();
 }
 
-const privateMiddleware = (req, res, next) => {
-  const url = req.url;
-  if (url === "/protected") {
-    return res.send("<h1>Not Allowed</h1>");
-  }
-  console.log("Allowed, you may continue.");
+const timeLogger = (req, res, next) => {
+  const date = new Date();
+  console.log(
+    `Time: ${date.getFullYear()}.${date.getMonth()}.${date.getDay()}`
+  );
   next();
-}
+};
 
-const handleProtected = (res, req) => {
-  return res.send("<h1>Welcome to the private lounge.</h1>");
-}
+const securityLogger = (req, res, next) => {
+  if (req.protocol === "https") {
+    console.log("Secure");
+  } else {
+    console.log("Insecure");
+  }
+  next();
+};
+
+const protectorMiddleware = (req, res, next) => {
+  if (req.url !== "/protected") next();
+};
 
 const handleHome = (req, res, next) => {
   return res.send("Home");
 }
 
-const handleLogin = (req, res) => {
-  return res.send("Login here.");
-}
-
-const handleAbout = (req, res) => {
-  return res.send("<h1>About<h1>");
-};
-
-const handleContact = (req, res) => {
-  return res.send("<h1>Contact<h1>");
-};
-
 app.use(logger);
-app.use(privateMiddleware);
+app.use(timeLogger);
+app.use(securityLogger);
+app.use(protectorMiddleware);
 
 app.get("/", handleHome);
-app.get("/login", handleLogin);
-app.get("/about", handleAbout);
-app.get("/contact", handleContact);
-app.get("/protected", handleProtected);
 
 const handleListening = () => console.log(`Server listening on port http://localhost:${PORT}`);
 
