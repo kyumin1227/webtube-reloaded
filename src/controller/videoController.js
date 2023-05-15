@@ -1,13 +1,13 @@
 import Video from "../models/video";
 
-export const home = (req, res) => {
-    const promise = Video.find({});
-    promise.then((videos) => {
-    console.log("videos", videos);
-    }, (error) => {
-    console.log("errors", error);
-    });
-    return res.render("home", { pageTitle: "Home", videos: []})};
+export const home = async (req, res) => {
+    try {
+        const videos = await Video.find({});
+        return res.render("home", { pageTitle: "Home", videos: [] });
+    } catch {
+        return res.render("server-error");
+    }
+};
 export const getEdit = (req, res) => {
     const id = req.params.id;
     const video = videos[id - 1];
