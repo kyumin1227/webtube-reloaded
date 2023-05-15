@@ -19,10 +19,10 @@ export const postEdit = (req, res) => {
     videos[id - 1].title = title;
     return res.redirect(`/videos/${id}`);
 }
-export const watch = (req, res) => {
-    const id = req.params.id;
-    const video = videos[id - 1];
-    return res.render("Watch", { pageTitle: `Watching ${video.title}`, video });
+export const watch = async (req, res) => {
+    const { id } = req.params;
+    const video = await Video.findById(id);
+    return res.render("Watch", { pageTitle: `${video.title}`, video });
 };  
 export const search = (req, res) => res.send("Search");
 export const upload = (req, res) => res.send("Upload");
@@ -41,14 +41,13 @@ export const postUpload = async (req, res) => {
             description,
             createdAt: Date.now(),
             hashtags: hashtags.split(",").map(word => `#${word}`),
-            meta: {
-                views: 0,
-                rating: 0,
-            },
         });
     } catch(error) {
         console.log(error);
-        return res.render("upload", { pageTitle: "Upload Video" });
+        return res.render("upload", {
+            pageTitle: "Upload Video",
+            errorMessage: error._message,
+        });
     }
     return res.redirect("/");
 };
