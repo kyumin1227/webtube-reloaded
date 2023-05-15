@@ -1,8 +1,13 @@
 import Video from "../models/video";
 
 export const home = (req, res) => {
-    video.find({}, (error, videos) => { });
-    return res.render("home", { pageTitle: "Home", videos})};
+    const promise = Video.find({});
+    promise.then((videos) => {
+    console.log("videos", videos);
+    }, (error) => {
+    console.log("errors", error);
+    });
+    return res.render("home", { pageTitle: "Home", videos: []})};
 export const getEdit = (req, res) => {
     const id = req.params.id;
     const video = videos[id - 1];
