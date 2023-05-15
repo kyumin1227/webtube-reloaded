@@ -1,9 +1,7 @@
-const fakeUser = {
-    username: "Kyumin",
-    loggedIn: false,
-}
+import Video from "../models/video";
 
-export const trending = (req, res) => {
+export const home = (req, res) => {
+    video.find({}, (error, videos) => { });
     return res.render("home", { pageTitle: "Home", videos})};
 export const getEdit = (req, res) => {
     const id = req.params.id;
