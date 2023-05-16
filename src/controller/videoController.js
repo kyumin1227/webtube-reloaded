@@ -26,7 +26,7 @@ export const postEdit = async (req, res) => {
     await Video.findByIdAndUpdate(id, {
         title,
         description,
-        hashtags
+        hashtags: Video.formatHashtags(hashtags),
     })
     return res.redirect(`/videos/${id}`);
 }
@@ -41,9 +41,10 @@ export const watch = async (req, res) => {
 };  
 export const search = (req, res) => res.send("Search");
 export const upload = (req, res) => res.send("Upload");
-export const deleteVideo = (req, res) => {
-    console.log(req.params);
-    return res.send("Delete Video");
+export const deleteVideo = async (req, res) => {
+    const { id } = req.params;
+    await Video.findByIdAndDelete(id);
+    return res.redirect("/");
 };
 export const getUpload = (req, res) => {
     return res.render("upload", {pageTitle: "Upload Video"});
@@ -55,7 +56,7 @@ export const postUpload = async (req, res) => {
             title,
             description,
             createdAt: Date.now(),
-            hashtags: hashtags.split(",").map(word => `#${word}`),
+            hashtags: Video.formatHashtags(hashtags),
         });
     } catch(error) {
         console.log(error);
