@@ -5,7 +5,7 @@ export const getJoin = (req, res) =>
 export const postJoin = async (req, res) => {
   const { name, username, email, password, password2, location } = req.body;
   if (password !== password2) {
-    return res.render("join", {
+    return res.status(400).render("join", {
       pageTitle,
       errorMessage: "비밀번호가 서로 일치하지 않습니다.",
     });
@@ -13,14 +13,14 @@ export const postJoin = async (req, res) => {
   const pageTitle = "Join";
   const usernameExist = await User.exists({ username });
   if (usernameExist) {
-    return res.render("join", {
+    return res.status(400).render("join", {
       pageTitle,
       errorMessage: "이미 등록된 유저이름 입니다.",
     });
   }
   const emailExist = await User.exists({ email });
   if (emailExist) {
-    return res.render("join", {
+    return res.status(400).render("join", {
       pageTitle,
       errorMessage: "이미 등록된 이메일 입니다.",
     });
