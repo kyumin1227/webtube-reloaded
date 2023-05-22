@@ -109,11 +109,33 @@ export const finishGithubLogin = async (req, res) => {
       })
     ).json();
     console.log(emailData);
-    const email = emailData.find(
+    const emailObj = emailData.find(
       (email) => email.primary === true && email.verified === true
     );
-    if (!email) {
+    if (!emailObj) {
       return res.redirect("/login");
+    }
+    const existingUser = await User.findOne({ email: emailObj.email });
+    console.log(existingUser);
+    if (existingUser) {
+      req.session.loggedIn = true;
+      req.session.user = existingUser;
+      return res.redirect("/");
+    } else {
+      // create an account
+      if (userData.name == null) {
+      }
+      const user = await User.create({
+        name: userData.name,
+        socialOnly: true,
+        username: userData.login,
+        email: emailObj.email,
+        password: "",
+        location: userData.location,
+      });
+      req.session.loggedIn = true;
+      req.session.user = user;
+      return res.redirect("/");
     }
   } else {
     // Access 토큰을 받아오지 못하였을 경우
