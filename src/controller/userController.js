@@ -78,15 +78,17 @@ export const finishGithubLogin = async (req, res) => {
     client_secret: process.env.GH_SECRET,
     code: req.query.code,
   };
-  const params = new URLSearchParams(config).toString;
-  const finalURL = `${baseUrl}?${params}`;
-  const tokenRequest = await fetch(finalURL, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-    },
-  }).json();
-  const json = await data.json();
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  const tokenRequest = await (
+    await fetch(finalUrl, {
+      // Access 토큰 받아오기
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+  ).json();
   if ("access_token" in tokenRequest) {
     const { access_token } = tokenRequest;
     const userRequest = await (
@@ -98,6 +100,8 @@ export const finishGithubLogin = async (req, res) => {
     ).json();
     console.log(userRequest);
   } else {
+    console.log("fail");
+    return res.redirect("/login");
   }
 };
 export const edit = (req, res) => res.send("Edit");
