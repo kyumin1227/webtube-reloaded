@@ -90,16 +90,33 @@ export const finishGithubLogin = async (req, res) => {
     })
   ).json();
   if ("access_token" in tokenRequest) {
+    // Access 토큰을 성공적으로 받아 왔을 경우 해당 토큰을 이용해 github api에 접근하여 정보를 받아옴
     const { access_token } = tokenRequest;
-    const userRequest = await (
-      await fetch("https://api.github.com/user", {
+    const apiUrl = "https://api.github.com";
+    const userData = await (
+      await fetch(`${apiUrl}/user`, {
         headers: {
           Authorization: `token ${access_token}`,
         },
       })
     ).json();
-    console.log(userRequest);
+    console.log(userData);
+    const emailData = await (
+      await fetch(`${apiUrl}/user/emails`, {
+        headers: {
+          Authorization: `token ${access_token}`,
+        },
+      })
+    ).json();
+    console.log(emailData);
+    const email = emailData.find(
+      (email) => email.primary === true && email.verified === true
+    );
+    if (!email) {
+      return res.redirect("/login");
+    }
   } else {
+    // Access 토큰을 받아오지 못하였을 경우
     console.log("fail");
     return res.redirect("/login");
   }
