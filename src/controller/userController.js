@@ -41,7 +41,7 @@ export const getLogin = (req, res) =>
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
   const pageTitle = "Login";
-  const user = await User.findOne({ username });
+  const user = await User.findOne({ username, socialOnly: false });
   if (!user) {
     return res.status(400).render("login", {
       pageTitle,
@@ -115,17 +115,25 @@ export const finishGithubLogin = async (req, res) => {
     if (!emailObj) {
       return res.redirect("/login");
     }
-    const existingUser = await User.findOne({ email: emailObj.email });
-    console.log(existingUser);
-    if (existingUser) {
+    const existingUserEmail = await User.findOne({ email: emailObj.email });
+    console.log(existingUserEmail);
+    const existingUserName = await User.findOne({
+      username: userData.login,
+    });
+    console.log(existingUserName);
+    if (existingUserEmail) {
       req.session.loggedIn = true;
-      req.session.user = existingUser;
+      req.session.user = existingUserEmail;
       return res.redirect("/");
+    } else if (existingUserName) {
+      return res.redirect("/login");
     } else {
       // create an account
+      const user = null;
       if (userData.name === null) {
         console.log("Name is null");
-        const user = await User.create({
+        // 이메일은 다르나 username이 같은 경우 오류 발생 (수정 필요)
+        user = await User.create({
           name: userData.login,
           socialOnly: true,
           username: userData.login,
@@ -133,18 +141,16 @@ export const finishGithubLogin = async (req, res) => {
           password: "",
           location: userData.location,
         });
-        req.session.loggedIn = true;
-        req.session.user = user;
-        return res.redirect("/");
+      } else {
+        user = await User.create({
+          name: userData.name,
+          socialOnly: true,
+          username: userData.login,
+          email: emailObj.email,
+          password: "",
+          location: userData.location,
+        });
       }
-      const user = await User.create({
-        name: userData.name,
-        socialOnly: true,
-        username: userData.login,
-        email: emailObj.email,
-        password: "",
-        location: userData.location,
-      });
       req.session.loggedIn = true;
       req.session.user = user;
       return res.redirect("/");
