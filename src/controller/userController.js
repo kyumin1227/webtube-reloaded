@@ -131,8 +131,8 @@ export const finishGithubLogin = async (req, res) => {
       // create an account
       const user = null;
       if (userData.name === null) {
-        console.log("Name is null");
         // 이메일은 다르나 username이 같은 경우 오류 발생 (수정 필요)
+        console.log("username is null");
         user = await User.create({
           name: userData.login,
           socialOnly: true,
@@ -141,7 +141,11 @@ export const finishGithubLogin = async (req, res) => {
           password: "",
           location: userData.location,
         });
+        req.session.loggedIn = true;
+        req.session.user = user;
+        return res.redirect("/");
       } else {
+        console.log("user name is not null");
         user = await User.create({
           name: userData.name,
           socialOnly: true,
@@ -151,6 +155,7 @@ export const finishGithubLogin = async (req, res) => {
           location: userData.location,
         });
       }
+      console.log("create over");
       req.session.loggedIn = true;
       req.session.user = user;
       return res.redirect("/");
@@ -161,7 +166,10 @@ export const finishGithubLogin = async (req, res) => {
     return res.redirect("/login");
   }
 };
-export const edit = (req, res) => res.send("Edit");
+export const getEdit = (req, res) => {
+  return res.render("edit-profile");
+};
+export const postEdit = (req, res) => res.send("Edit");
 export const remove = (req, res) => res.send("Remove User");
 export const logout = (req, res) => res.send("Logout");
 export const see = (req, res) => res.send("See User");

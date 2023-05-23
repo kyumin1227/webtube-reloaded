@@ -4,3 +4,5 @@ export const localsMiddleware = (req, res, next) => {
   res.locals.loggedInUser = req.session.user;
   next();
 };
+
+export const multerMiddleware = multer({ dest: "uploads/" });
