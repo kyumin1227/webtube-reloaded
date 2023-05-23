@@ -123,7 +123,19 @@ export const finishGithubLogin = async (req, res) => {
       return res.redirect("/");
     } else {
       // create an account
-      if (userData.name == null) {
+      if (userData.name === null) {
+        console.log("Name is null");
+        const user = await User.create({
+          name: userData.login,
+          socialOnly: true,
+          username: userData.login,
+          email: emailObj.email,
+          password: "",
+          location: userData.location,
+        });
+        req.session.loggedIn = true;
+        req.session.user = user;
+        return res.redirect("/");
       }
       const user = await User.create({
         name: userData.name,
