@@ -93,6 +93,7 @@ export const finishGithubLogin = async (req, res) => {
     // Access 토큰을 성공적으로 받아 왔을 경우 해당 토큰을 이용해 github api에 접근하여 정보를 받아옴
     const { access_token } = tokenRequest;
     const apiUrl = "https://api.github.com";
+    // userData = 깃허브에서 받아오는 유저의 정보에 대한 오브젝트
     const userData = await (
       await fetch(`${apiUrl}/user`, {
         headers: {
@@ -101,6 +102,7 @@ export const finishGithubLogin = async (req, res) => {
       })
     ).json();
     console.log(userData);
+    // emailData = 깃허브에서 받아오는 유저의 이메일에 대한 오브젝트
     const emailData = await (
       await fetch(`${apiUrl}/user/emails`, {
         headers: {
@@ -115,23 +117,25 @@ export const finishGithubLogin = async (req, res) => {
     if (!emailObj) {
       return res.redirect("/login");
     }
-    const existingUserEmail = await User.findOne({ email: emailObj.email });
-    console.log(existingUserEmail);
-    const existingUserName = await User.findOne({
+    const userEmailObj = await User.findOne({ email: emailObj.email });
+    // userEmailObj = 깃허브에서 받아온 이메일과 같은 이메일이 데이터베이스에 있는지 확인 하고 만약 있다면 해당 오브젝트를 가져온다.
+    const usernameObj = await User.findOne({
       username: userData.login,
     });
-    console.log(existingUserName);
-    if (existingUserEmail) {
+    // usernameObj = 깃허브에서 받아온 유저명과 같은 유저명이 데이터베이스에 있는지 확인 하고 만약 있다면 해당 오브젝트를 가져온다.
+    if (userEmailObj) {
+      // 데이터베이스에 이메일이 있다면 로그인 시키고 해당 유저의 이름을 userEmailObj에서 받아온다.
       req.session.loggedIn = true;
-      req.session.user = existingUserEmail;
+      req.session.user = userEmailObj;
       return res.redirect("/");
-    } else if (existingUserName) {
+    } else if (usernameObj) {
+      // 데이터베이스에 같은 유저명이 있다면 /login 주소로 돌려보낸다.
       return res.redirect("/login");
     } else {
       // create an account
       let user = null;
       if (userData.name === null) {
-        // 이메일은 다르나 username이 같은 경우 오류 발생 (수정 필요)
+        // 깃허브에서 받아온 이름이 null일 경우 이름을 login 아이디로 지정하여 가입시킨 후 로그인 시킨다.
         console.log("username is null");
         user = await User.create({
           name: userData.login,
@@ -146,6 +150,7 @@ export const finishGithubLogin = async (req, res) => {
         req.session.user = user;
         return res.redirect("/");
       } else {
+        // 깃허브에서 받아온 이름이 null이 아닌 경우 정상적으로 가입 시킨 후 로그인 시킨다.
         console.log("user name is not null");
         user = await User.create({
           name: userData.name,
@@ -160,7 +165,6 @@ export const finishGithubLogin = async (req, res) => {
         req.session.user = user;
         return res.redirect("/");
       }
-      console.log("create over");
     }
   } else {
     // Access 토큰을 받아오지 못하였을 경우
