@@ -135,6 +135,7 @@ export const finishGithubLogin = async (req, res) => {
         console.log("username is null");
         user = await User.create({
           name: userData.login,
+          avatarUrl: userData.avatar_url,
           socialOnly: true,
           username: userData.login,
           email: emailObj.email,
@@ -148,6 +149,7 @@ export const finishGithubLogin = async (req, res) => {
         console.log("user name is not null");
         user = await User.create({
           name: userData.name,
+          avatarUrl: userData.avatar_url,
           socialOnly: true,
           username: userData.login,
           email: emailObj.email,
@@ -170,6 +172,8 @@ export const getEdit = (req, res) => {
   return res.render("edit-profile");
 };
 export const postEdit = (req, res) => res.send("Edit");
-export const remove = (req, res) => res.send("Remove User");
-export const logout = (req, res) => res.send("Logout");
+export const logout = (req, res) => {
+  req.session.destroy();
+  return res.redirect("/");
+};
 export const see = (req, res) => res.send("See User");
