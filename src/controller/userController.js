@@ -5,13 +5,13 @@ export const getJoin = (req, res) =>
   res.render("join", { pageTitle: "Create Account" });
 export const postJoin = async (req, res) => {
   const { name, username, email, password, password2, location } = req.body;
+  const pageTitle = "Join";
   if (password !== password2) {
     return res.status(400).render("join", {
       pageTitle,
       errorMessage: "비밀번호가 서로 일치하지 않습니다.",
     });
   }
-  const pageTitle = "Join";
   const usernameExist = await User.exists({ username });
   if (usernameExist) {
     return res.status(400).render("join", {
@@ -129,7 +129,7 @@ export const finishGithubLogin = async (req, res) => {
       return res.redirect("/login");
     } else {
       // create an account
-      const user = null;
+      let user = null;
       if (userData.name === null) {
         // 이메일은 다르나 username이 같은 경우 오류 발생 (수정 필요)
         console.log("username is null");
@@ -156,11 +156,11 @@ export const finishGithubLogin = async (req, res) => {
           password: "",
           location: userData.location,
         });
+        req.session.loggedIn = true;
+        req.session.user = user;
+        return res.redirect("/");
       }
       console.log("create over");
-      req.session.loggedIn = true;
-      req.session.user = user;
-      return res.redirect("/");
     }
   } else {
     // Access 토큰을 받아오지 못하였을 경우
