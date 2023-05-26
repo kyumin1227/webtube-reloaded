@@ -23,7 +23,7 @@ app.use(
   })
 );
 app.use(localsMiddleware);
-app.use("/static", express.static("assets"));
+app.use("/static", express.static("assets")); // 주소창에서 static 경로로 가면 유저는 assets 폴더에 접근할 수 있습니다.
 app.use("/", rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);

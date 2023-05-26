@@ -9,13 +9,13 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/client/js/main.js":
-/*!*******************************!*\
-  !*** ./src/client/js/main.js ***!
-  \*******************************/
+/***/ "./src/client/js/videoPlayer.js":
+/*!**************************************!*\
+  !*** ./src/client/js/videoPlayer.js ***!
+  \**************************************/
 /***/ (() => {
 
-eval("alert(\"hi\");\n\n//# sourceURL=webpack://wetube/./src/client/js/main.js?");
+eval("console.log(\"video player\");\n\n//# sourceURL=webpack://wetube/./src/client/js/videoPlayer.js?");
 
 /***/ })
 
@@ -26,7 +26,7 @@ eval("alert(\"hi\");\n\n//# sourceURL=webpack://wetube/./src/client/js/main.js?"
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
 /******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./src/client/js/main.js"]();
+/******/ 	__webpack_modules__["./src/client/js/videoPlayer.js"]();
 /******/ 	
 /******/ })()
 ;

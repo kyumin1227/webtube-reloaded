@@ -1,9 +1,17 @@
 extends base.pug
 
 block content 
-    div
-        p=video.description
-        small=video.createdAt
-    a(href=`${video.id}/edit`) Edit Video &rarr;
-    br
-    a(href=`${video.id}/delete`) Delete Video &rarr;
+    video(src="/" + video.fileUrl, controls)
+    div 
+        button#play Play 
+        button#mute Mute 
+        span#time 00:00/00:00
+    //- div
+    //-     p=video.description
+    //-     small=video.createdAt
+    //- a(href=`${video.id}/edit`) Edit Video &rarr;
+    //- br
+    //- a(href=`${video.id}/delete`) Delete Video &rarr;
+
+block scripts 
+    script(src="/static/js/videoPlayer.js") 

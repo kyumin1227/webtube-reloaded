@@ -2,10 +2,14 @@ const path = require("path");
 
 module.exports = {
   // entry와 output은 필수조건
-  entry: "./src/client/js/main.js", // 변경하고자 하는 파일
+  entry: {
+    // 변경하고자 하는 파일
+    main: "./src/client/js/main.js",
+    videoPlayer: "./src/client/js/videoPlayer.js",
+  },
   mode: "development", // mode는 production(압축하여 한줄로 표현한 코드)과 development(알아보기 쉽게 코멘트 추가) 두가지가 있습니다.
   output: {
-    filename: "main.js", // 변환된 파일명
+    filename: "js/[name].js", // 변환된 파일명 [name]으로 입력 할 경우 entry의 이름을 가져옵니다.
     path: path.resolve(__dirname, "assets", "js"), // 변환된 파일 저장 경로(반드시 절대 경로)
     // __dirname은 자바스크립트의 기본 변수로 현재 폴더의 절대 경로를 출력해줍니다.
     // path.resolve는 내부의 변수들을 이어 하나의 경로로 만들어줍니다.
