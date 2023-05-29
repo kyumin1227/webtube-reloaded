@@ -3,8 +3,8 @@ extends base.pug
 block content 
     //- video(src="/" + video.fileUrl, controls)
     div#videoContainer
-        div 
-            video(src="https://serranoarevalo.github.io/notflix/9bfd1023900e31286103369c803c7ee9.ogv" width="700px")
+        video(src="https://serranoarevalo.github.io/notflix/9bfd1023900e31286103369c803c7ee9.ogv" width="700px")
+        div#videoControls
             button#play Play 
             button#mute Mute 
             input(type="range" value="0.5" min="0" max="1" step="0.1")#volume
