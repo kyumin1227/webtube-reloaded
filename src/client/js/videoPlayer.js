@@ -5,6 +5,8 @@ const volume = document.getElementById("volume");
 const currentTime = document.getElementById("currentTime");
 const totalTime = document.getElementById("totalTime");
 const timeline = document.getElementById("timeline");
+const fullScreenBtn = document.getElementById("fullScreen");
+const videoContainer = document.getElementById("videoContainer");
 
 video.volume = 0.5;
 
@@ -65,9 +67,21 @@ const handleVideoTime = (event) => {
   // video.currentTime = timeline.value;
 };
 
+const handleFullScreen = () => {
+  const fullScreen = document.fullscreenElement; // Full Screen이면 해당 엘리먼트를 반환하고 Full Screen이 아니면 null을 반환 함
+  if (fullScreen) {
+    document.exitFullscreen(); // Full Screen을 나갈려면 document에서 불러야 함
+    fullScreenBtn.innerText = "Enter Full Screen";
+  } else {
+    videoContainer.requestFullscreen();
+    fullScreenBtn.innerText = "Exit Full Screen";
+  }
+};
+
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMute);
 volume.addEventListener("input", handleVolumeChange); // volume range를 움직이면 실행
 timeline.addEventListener("input", handleVideoTime); // timeline range를 움직이면 실행
 video.addEventListener("loadedmetadata", handleLoadedMetadata); // video의 메타데이터를 불러옴
 video.addEventListener("timeupdate", handleTimeUpdate); // video의 시간 변화를 감지
+fullScreenBtn.addEventListener("click", handleFullScreen);
