@@ -111,7 +111,7 @@ playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMute);
 volume.addEventListener("input", handleVolumeChange); // volume range를 움직이면 실행
 timeline.addEventListener("input", handleVideoTime); // timeline range를 움직이면 실행
-video.addEventListener("loadedmetadata", handleLoadedMetadata); // video의 메타데이터를 불러옴
+video.addEventListener("loadedmetadata", handleLoadedMetadata); //  브라우저가 video의 메타데이터를 불러왔을 때 실행
 video.addEventListener("timeupdate", handleTimeUpdate); // video의 시간 변화를 감지
 fullScreenBtn.addEventListener("click", handleFullScreen);
 video.addEventListener("mousemove", handleMouseMove); // 마우스가 video 안으로 들어왔을 때 실행
