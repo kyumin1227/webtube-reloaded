@@ -7,10 +7,12 @@ import {
   postLogin,
 } from "../controller/userController";
 import { publicOnlyMiddleware } from "../middlewares";
+import { getTest, postTest } from "../controller/testController";
 
 const rootRouter = express.Router();
 
 rootRouter.get("/", home);
+rootRouter.route("/test").get(getTest).post(postTest);
 rootRouter.route("/join").all(publicOnlyMiddleware).get(getJoin).post(postJoin);
 rootRouter
   .route("/login")
