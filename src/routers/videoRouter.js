@@ -1,3 +1,5 @@
+// 비디오 라우터: "/videos" 주소를 관리하는 라우터를 작성한다.
+
 import express from "express";
 import {
   watch,

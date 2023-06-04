@@ -1,9 +1,12 @@
+// 각종 middleware을 작성한다.
+
 import multer from "multer";
 
+// res.locals에 값을 넣어주는 라우터이다. (res.locals는 controller에서 res로 보내주지 않아도 pug에서 접근 가능)
 export const localsMiddleware = (req, res, next) => {
-  res.locals.siteName = "Wetube";
-  res.locals.loggedIn = Boolean(req.session.loggedIn);
-  res.locals.loggedInUser = req.session.user;
+  res.locals.siteName = "Wetube"; // res.locals.siteName에 사이트 이름을 저장한다.
+  res.locals.loggedIn = Boolean(req.session.loggedIn); // res.locals.loggedIn 유저의 로그인 여부를 저장한다.
+  res.locals.loggedInUser = req.session.user; // res.locals.loggedInUser 유저 이름을 저장한다.
   next();
 };
 
