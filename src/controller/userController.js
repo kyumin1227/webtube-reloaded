@@ -2,26 +2,26 @@ import User from "../models/User";
 import bcrypt from "bcrypt";
 
 export const getJoin = (req, res) =>
-  res.render("join", { pageTitle: "Create Account" });
+  res.render("user/join", { pageTitle: "Create Account" });
 export const postJoin = async (req, res) => {
   const { name, username, email, password, password2, location } = req.body;
   const pageTitle = "Join";
   if (password !== password2) {
-    return res.status(400).render("join", {
+    return res.status(400).render("user/join", {
       pageTitle,
       errorMessage: "비밀번호가 서로 일치하지 않습니다.",
     });
   }
   const usernameExist = await User.exists({ username });
   if (usernameExist) {
-    return res.status(400).render("join", {
+    return res.status(400).render("user/join", {
       pageTitle,
       errorMessage: "이미 등록된 유저이름 입니다.",
     });
   }
   const emailExist = await User.exists({ email });
   if (emailExist) {
-    return res.status(400).render("join", {
+    return res.status(400).render("user/join", {
       pageTitle,
       errorMessage: "이미 등록된 이메일 입니다.",
     });
@@ -30,27 +30,27 @@ export const postJoin = async (req, res) => {
     await User.create({ name, username, email, password, location });
     return res.redirect("/login");
   } catch (error) {
-    return res.status(400).render("join", {
+    return res.status(400).render("user/join", {
       pageTitle,
       errorMessage: error._message,
     });
   }
 };
 export const getLogin = (req, res) =>
-  res.render("login", { pageTitle: "Login" });
+  res.render("user/login", { pageTitle: "Login" });
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
   const pageTitle = "Login";
   const user = await User.findOne({ username, socialOnly: false });
   if (!user) {
-    return res.status(400).render("login", {
+    return res.status(400).render("user/login", {
       pageTitle,
       errorMessage: "존재하지 않는 유저 이름입니다.",
     });
   }
   const ok = await bcrypt.compare(password, user.password);
   if (!ok) {
-    return res.status(400).render("login", {
+    return res.status(400).render("user/login", {
       pageTitle,
       errorMessage: "비밀번호가 일치하지 않습니다.",
     });
@@ -173,7 +173,7 @@ export const finishGithubLogin = async (req, res) => {
   }
 };
 export const getEdit = async (req, res) => {
-  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+  return res.render("user/edit-profile", { pageTitle: "Edit Profile" });
 };
 export const postEdit = async (req, res) => {
   const {
@@ -189,7 +189,7 @@ export const postEdit = async (req, res) => {
   if (sessionUsername !== username) {
     const exists = await User.findOne({ username });
     if (exists) {
-      return res.status(400).render("edit-profile", {
+      return res.status(400).render("user/edit-profile", {
         errorMessage: "이미 존재하는 유저이름 입니다.",
       });
     }
@@ -198,7 +198,7 @@ export const postEdit = async (req, res) => {
   if (sessionEmail !== email) {
     const exists = await User.findOne({ email });
     if (exists) {
-      return res.status(400).render("edit-profile", {
+      return res.status(400).render("user/edit-profile", {
         errorMessage: "이미 존재하는 이메일 입니다.",
       });
     }
@@ -228,4 +228,14 @@ export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
 };
+
+export const getChangePassword = (req, res) => {
+  return res.render("user/change-password", { pageTitle: "Change Password" });
+};
+
+export const postChangePassword = (req, res) => {
+  // send notification
+  return req.redirect("/");
+};
+
 export const see = (req, res) => res.send("See User");
