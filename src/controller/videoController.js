@@ -79,7 +79,8 @@ export const postUpload = async (req, res) => {
     });
     const user = await User.findById(_id); // 유저를 아이디로 찾습니다.
     user.videos.push(newVideo._id); // 유저의 videos에 새로 생성한 비디오의 아이디를 줍니다.
-    user.save(); // 변경된 유저를 저장합니다.
+    user.save(); // 변경된 유저를 저장합니다. (유저를 저장할 때 마다 비밀번호를 해싱하기 때문에 비밀번호가 달라지는 버그 발생)
+    // User model에서 비밀번호를 변경하였을 경우에만 해싱하는 걸로 해결
   } catch (error) {
     console.log(error);
     return res.status(400).render("video/upload", {
