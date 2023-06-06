@@ -182,15 +182,47 @@ export const postEdit = async (req, res) => {
     },
     body: { name, email, username, location },
   } = req; // ES6 문법 (아래 두 줄과 동일)
-  // const id = req.session.user._id;
+  // const _id = req.session.user._id;
   // const {name, email. username, location} = req.body;
-  await User.findByIdAndUpdate(_id, {
-    name,
-    email,
-    username,
-    location,
-  });
-  return res.render("edit-profile");
+
+  const sessionUsername = req.session.user.username;
+  if (sessionUsername !== username) {
+    const exists = await User.findOne({ username });
+    if (exists) {
+      return res.status(400).render("edit-profile", {
+        errorMessage: "이미 존재하는 유저이름 입니다.",
+      });
+    }
+  }
+  const sessionEmail = req.session.user.email;
+  if (sessionEmail !== email) {
+    const exists = await User.findOne({ email });
+    if (exists) {
+      return res.status(400).render("edit-profile", {
+        errorMessage: "이미 존재하는 이메일 입니다.",
+      });
+    }
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      name,
+      email,
+      username,
+      location,
+    },
+    { new: true } // 아래의 req.session.user에 값을 넘길 때 최신 값을 가져오도록 설정
+  );
+  req.session.user = updatedUser;
+  // req.session.user = {
+  //   ...req.session.user, // 기존의 값을 불러옴
+  //   name,
+  //   email,
+  //   username,
+  //   location,
+  // };
+  return res.redirect("/users/edit");
 };
 export const logout = (req, res) => {
   req.session.destroy();
