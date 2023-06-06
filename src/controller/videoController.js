@@ -33,15 +33,14 @@ export const postEdit = async (req, res) => {
 };
 export const watch = async (req, res) => {
   const { id } = req.params;
-  const video = await Video.findById(id);
-  const owner = await User.findById(video.owner); // video가 가지고 있는 owner로 유저 찾기
+  const video = await Video.findById(id).populate("owner"); // populate를 이용하면 video의 owner 칸에 찾은 유저의 정보가 들어감
+  // const owner = await User.findById(video.owner); // video가 가지고 있는 owner로 유저 찾기
   if (!video) {
     return res.render("404", { pageTitle: "Video not found." });
   }
   return res.render("video/watch", {
     pageTitle: `${video.title}`,
     video,
-    owner,
   });
 };
 export const search = async (req, res) => {
