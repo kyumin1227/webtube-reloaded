@@ -10,6 +10,7 @@ const videoSchema = new mongoose.Schema({
     views: { type: Number, default: 0, required: true },
     rating: { type: Number, default: 0, required: true },
   },
+  owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" }, // 해당 오브젝트의 타입은 ObjectId 이며 해당 값은 User로 부터 옵니다.
 });
 
 videoSchema.static("formatHashtags", function (hashtags) {
