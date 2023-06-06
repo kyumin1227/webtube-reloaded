@@ -3,7 +3,7 @@ extends ../base.pug
 block content 
     //- video(src="/" + video.fileUrl, controls)
     div#videoContainer
-        video(src="https://serranoarevalo.github.io/notflix/9bfd1023900e31286103369c803c7ee9.ogv" width="700px")
+        video(src=`/${video.fileUrl}` width="700px")
         div#videoControls
             button#play Play 
             button#mute Mute 
@@ -17,12 +17,12 @@ block content
             div 
                 button#fullScreen Enter Full Screen
         
-    //- div
-    //-     p=video.description
-    //-     small=video.createdAt
-    //- a(href=`${video.id}/edit`) Edit Video &rarr;
-    //- br
-    //- a(href=`${video.id}/delete`) Delete Video &rarr;
+    div
+        p=video.description
+        small=video.createdAt
+    a(href=`${video.id}/edit`) Edit Video &rarr;
+    br
+    a(href=`${video.id}/delete`) Delete Video &rarr;
 
 block scripts 
     script(src="/static/js/videoPlayer.js")

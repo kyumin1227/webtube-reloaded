@@ -178,12 +178,15 @@ export const getEdit = async (req, res) => {
 export const postEdit = async (req, res) => {
   const {
     session: {
-      user: { _id },
+      user: { _id, avatarUrl },
     },
     body: { name, email, username, location },
+    file,
   } = req; // ES6 문법 (아래 두 줄과 동일)
   // const _id = req.session.user._id;
   // const {name, email. username, location} = req.body;
+
+  console.log(file);
 
   const sessionUsername = req.session.user.username;
   if (sessionUsername !== username) {
@@ -211,10 +214,11 @@ export const postEdit = async (req, res) => {
       email,
       username,
       location,
+      avatarUrl: file ? file.path : avatarUrl, // 아바타를 바꾸지 않을때를 대비해서 file이 있으면 바꾼 file로 없으면 기존 avatarUrl 사용
     },
     { new: true } // 아래의 req.session.user에 값을 넘길 때 최신 값을 가져오도록 설정
   );
-  req.session.user = updatedUser;
+  req.session.user = updatedUser; // session의 값을 최신화
   // req.session.user = {
   //   ...req.session.user, // 기존의 값을 불러옴
   //   name,
@@ -230,12 +234,38 @@ export const logout = (req, res) => {
 };
 
 export const getChangePassword = (req, res) => {
+  if (req.session.user.socialOnly === true) {
+    // 소셜 로그인 유저일 경우
+    return res.redirect("/");
+  }
   return res.render("user/change-password", { pageTitle: "Change Password" });
 };
 
-export const postChangePassword = (req, res) => {
+export const postChangePassword = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { oldPassword, newPassword, newPasswordConfirm },
+  } = req;
+  const user = await User.findById(_id);
+  const ok = await bcrypt.compare(oldPassword, user.password);
+  if (!ok) {
+    return res.status(400).render("user/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "이전 비밀번호가 틀립니다.",
+    });
+  }
+  if (newPassword !== newPasswordConfirm) {
+    return res.status(400).render("user/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "새로 입력한 비밀번호가 다릅니다.",
+    });
+  }
+  user.password = newPassword;
+  await user.save(); // 비밀번호를 해싱
   // send notification
-  return req.redirect("/");
+  return res.redirect("/users/logout"); // 비밀번호를 바꾸면 로그아웃 시키기
 };
 
 export const see = (req, res) => res.send("See User");

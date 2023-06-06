@@ -10,7 +10,17 @@ export const localsMiddleware = (req, res, next) => {
   next();
 };
 
-export const multerMiddleware = multer({ dest: "uploads/" });
+// export const multerMiddleware = multer({ dest: "uploads/" }); // 유저가 업로드한 파일을 저장할 폴더 지정
+export const avatarUpload = multer({
+  // avatar 업로드를 위한 미들웨어 (용량 제한 3Mb)
+  dest: "uploads/avatars/",
+  limits: { fileSize: 3000000 },
+});
+export const videoUpload = multer({
+  // video 업로드을 위한 미들웨어 (용량 제한 10Mb)
+  dest: "uploads/videos/",
+  limits: { fileSize: 10000000 },
+});
 
 export const protectorMiddleware = (req, res, next) => {
   // 로그인 한 사람만 들어갈 수 있게 설정
