@@ -270,16 +270,16 @@ export const postChangePassword = async (req, res) => {
 };
 
 export const see = async (req, res) => {
+  // 유저의 profile 입니다.
   const { id } = req.params;
-  const user = await User.findById(id);
+  const user = await User.findById(id).populate("videos"); // populate를 이용하여 해당 videos 값에 id를 이용하여 실제 videos의 데이터를 가져옵니다.
   if (!user) {
     return res.status(404).render("404", { pageTitle: "NOT FOUND USER" });
   }
-  const videos = await Video.find({ owner: user._id });
-  console.log(videos);
+  // const videos = await Video.find({ owner: user._id });
   return res.render("user/profile", {
     pageTitle: user.name,
     user,
-    videos,
+    // videos,
   });
 };

@@ -69,7 +69,7 @@ export const postUpload = async (req, res) => {
   const { file } = req;
   const { title, description, hashtags } = req.body;
   try {
-    await Video.create({
+    const newVideo = await Video.create({
       fileUrl: file.path,
       title,
       description,
@@ -77,6 +77,9 @@ export const postUpload = async (req, res) => {
       hashtags: Video.formatHashtags(hashtags),
       owner: _id,
     });
+    const user = await User.findById(_id); // 유저를 아이디로 찾습니다.
+    user.videos.push(newVideo._id); // 유저의 videos에 새로 생성한 비디오의 아이디를 줍니다.
+    user.save(); // 변경된 유저를 저장합니다.
   } catch (error) {
     console.log(error);
     return res.status(400).render("video/upload", {
