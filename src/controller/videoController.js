@@ -44,7 +44,7 @@ export const search = async (req, res) => {
   if (keyword) {
     videos = await Video.find({
       title: {
-        $regex: new RegExp(keyword, "i"),
+        $regex: new RegExp(keyword, "i"), // 정규표현식 (i의 위치는 플래그이며 옵션이다. i는 대소문자 구분하지 않고 검색, 플래그가 없으면 1개 이상이여도 하나만 검색 후 종료)
       },
     });
   }
@@ -60,9 +60,11 @@ export const getUpload = (req, res) => {
   return res.render("video/upload", { pageTitle: "Upload Video" });
 };
 export const postUpload = async (req, res) => {
+  const { file } = req;
   const { title, description, hashtags } = req.body;
   try {
     await Video.create({
+      fileUrl: file.path,
       title,
       description,
       createdAt: Date.now(),
