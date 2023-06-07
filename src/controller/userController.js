@@ -231,12 +231,14 @@ export const postEdit = async (req, res) => {
 };
 export const logout = (req, res) => {
   req.session.destroy();
+  req.flash("error", "Bye Bye");
   return res.redirect("/");
 };
 
 export const getChangePassword = (req, res) => {
   if (req.session.user.socialOnly === true) {
     // 소셜 로그인 유저일 경우
+    req.flash("error", "Can't change password");
     return res.redirect("/");
   }
   return res.render("user/change-password", { pageTitle: "Change Password" });
@@ -266,6 +268,7 @@ export const postChangePassword = async (req, res) => {
   user.password = newPassword;
   await user.save(); // 비밀번호를 해싱
   // send notification
+  req.flash("info", "Password updated");
   return res.redirect("/users/logout"); // 비밀번호를 바꾸면 로그아웃 시키기
 };
 

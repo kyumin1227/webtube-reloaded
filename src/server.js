@@ -1,6 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 import session from "express-session";
+import flash from "express-flash";
 import MongoStore from "connect-mongo";
 import rootRouter from "./routers/rootRouter";
 import userRouter from "./routers/userRouter";
@@ -15,6 +16,7 @@ app.set("view engine", "pug");
 app.set("views", process.cwd() + "/src/views");
 app.use(express.urlencoded({ extended: true }));
 app.use(
+  // logout 오류의 원인으로 추정 해결 要
   session({
     secret: process.env.COOKIE_SECRET,
     resave: false,
@@ -22,6 +24,7 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
   })
 );
+app.use(flash()); // req.flash를 통해 사용자에게 메세지를 보낼수 있게 해줌
 app.use(localsMiddleware);
 app.use("/uploads", express.static("uploads")); // 주소창에서 uploads 경로로 가면 서버는 uploads 폴더에 접근할 수 있습니다.
 app.use("/static", express.static("assets")); // 주소창에서 static 경로로 가면 서버는 assets 폴더에 접근할 수 있습니다.

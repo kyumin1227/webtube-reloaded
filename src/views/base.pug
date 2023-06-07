@@ -1,3 +1,5 @@
+include mixins/message
+
 doctype html
 html(lang="ko")
     head 
@@ -28,6 +30,11 @@ html(lang="ko")
                         a(href="/search") Search
                     
             h1=pageTitle
+        div 
+            if messages.error 
+                +messages("error", messages.error)
+            if messages.info 
+                +messages("info", messages.info)
         main
             block content
     include partials/footer.pug
