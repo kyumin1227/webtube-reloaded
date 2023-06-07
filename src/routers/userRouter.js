@@ -33,5 +33,5 @@ userRouter
   .all(protectorMiddleware)
   .get(getChangePassword)
   .post(postChangePassword);
-userRouter.get("/logout", logout);
+userRouter.get("/logout", protectorMiddleware, logout);
 export default userRouter;
