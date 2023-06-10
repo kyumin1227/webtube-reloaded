@@ -1,13 +1,16 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
+const BASE_JS = "./src/client/js/"; // js 파일 경로
+
 module.exports = {
   // entry와 output은 필수조건
   entry: {
     // 변경하고자 하는 파일
-    main: "./src/client/js/main.js",
-    videoPlayer: "./src/client/js/videoPlayer.js",
-    recorder: "./src/client/js/recorder.js",
+    main: BASE_JS + "main.js",
+    videoPlayer: BASE_JS + "videoPlayer.js",
+    recorder: BASE_JS + "recorder.js",
+    commentSection: BASE_JS + "commentSection.js",
   },
   mode: "development", // mode는 production(압축하여 한줄로 표현한 코드)과 development(알아보기 쉽게 코멘트 추가) 두가지가 있습니다.
   watch: true, // file들이 변경될 때 마다 자동으로 확인하여 최신화 시켜줌 like nodemon

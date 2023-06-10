@@ -4,13 +4,14 @@ const videoSchema = new mongoose.Schema({
   title: { type: String, required: true, trim: true },
   fileUrl: { type: String, required: true },
   description: { type: String, required: true, trim: true },
-  createdAt: Date,
+  createdAt: { type: Date, required: true, default: Date.now },
   hashtags: [{ type: String, default: Date.now, trim: true }],
   meta: {
     views: { type: Number, default: 0, required: true },
     rating: { type: Number, default: 0, required: true },
   },
   owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" }, // 해당 오브젝트의 타입은 ObjectId 이며 해당 값은 User로 부터 옵니다.
+  comment: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 videoSchema.static("formatHashtags", function (hashtags) {

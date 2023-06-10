@@ -17,7 +17,7 @@ block content
     //-         div 
     //-             button#fullScreen Enter Full Screen
 
-    div#videoContainer
+    div#videoContainer(data-id=video._id)
         video(src="/" + video.fileUrl)
         div#videoControls.videoControls
             div.videoControls__play
@@ -48,6 +48,14 @@ block content
             br
             a(href=`${video.id}/delete`) Delete Video &rarr;
 
+    if loggedIn
+        div.video__comments
+            form.video__comment-form#commentForm
+                textarea(cols="30", row="10", placeholder="Write a comment")
+                button Add Comment
+
 block scripts 
     script(src="/static/js/videoPlayer.js")
+    if loggedIn
+        script(src="/static/js/commentSection.js")
     script(src="https://kit.fontawesome.com/7c2aadab4a.js" crossorigin="anonymous")
