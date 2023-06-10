@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "The best way to watch videos.",
   "scripts": {
+    "start": "node build/init.js",
+    "build:server": "babel src -d build",
     "dev:server": "nodemon",
     "dev:assets": "webpack"
   },
@@ -13,6 +15,7 @@
   "author": "Kyumin",
   "license": "MIT",
   "dependencies": {
+    "@babel/cli": "^7.22.5",
     "bcrypt": "^5.1.0",
     "connect-mongo": "^5.0.0",
     "dotenv": "^16.0.3",
@@ -25,7 +28,7 @@
     "pug": "^3.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.5",
+    "@babel/core": "^7.22.5",
     "@babel/node": "^7.20.7",
     "@babel/preset-env": "^7.21.5",
     "babel-loader": "^9.1.2",
