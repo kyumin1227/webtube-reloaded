@@ -231,14 +231,14 @@ export const postEdit = async (req, res) => {
 };
 export const logout = (req, res) => {
   req.session.destroy();
-  req.flash("info", "Bye Bye");
+  // req.flash("info", "Bye Bye");
   return res.redirect("/");
 };
 
 export const getChangePassword = (req, res) => {
   if (req.session.user.socialOnly === true) {
     // 소셜 로그인 유저일 경우
-    req.flash("error", "Can't change password");
+    // req.flash("error", "Can't change password");
     return res.redirect("/");
   }
   return res.render("user/change-password", { pageTitle: "Change Password" });
