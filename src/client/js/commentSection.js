@@ -23,6 +23,7 @@ const handleSubmit = (event) => {
       rating: "5",
     }),
   });
+  textarea.value = "";
 };
 
 form.addEventListener("submit", handleSubmit);
