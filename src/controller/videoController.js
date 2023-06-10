@@ -145,5 +145,33 @@ export const createComment = async (req, res) => {
   const dbUser = await User.findById(user._id);
   dbUser.comments.push(comment._id);
   dbUser.save();
-  return res.sendStatus(201); // 201 = 생성됨
+  return res.status(201).json({ newCommentId: comment._id }); // 201 = 생성됨 json 값을 반환
+};
+
+export const deleteComment = async (req, res) => {
+  const {
+    params: { id },
+    session: { user },
+  } = req;
+  console.log(id, user);
+  const comment = await Comment.findById(id);
+
+  if (!comment) {
+    return res.sendStatus(404); // 404 보내고 페이지 끝내기
+  }
+
+  console.log(comment);
+
+  if (comment.owner.toString() == user._id) {
+    // 코멘트 주인의 코멘트 배열 수정
+    const user2 = await User.findById(comment.owner.toString());
+    user2.comments.pull(comment._id.toString());
+    user2.save();
+    // 코멘트 달린 비디오의 코멘트 배열 수정
+    const video = await Video.findById(comment.video.toString());
+    video.comments.pull(comment._id.toString());
+    video.save();
+    await Comment.findByIdAndDelete(id);
+    return res.sendStatus(200);
+  }
 };
