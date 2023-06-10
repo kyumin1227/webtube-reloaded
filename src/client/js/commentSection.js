@@ -5,7 +5,7 @@ const form = document.querySelector("#commentForm");
 const textarea = form.querySelector("textarea");
 const btn = form.querySelector("button");
 
-const handleSubmit = (event) => {
+const handleSubmit = async (event) => {
   event.preventDefault();
   const text = textarea.value;
   console.log(videoContainer.dataset);
@@ -13,14 +13,13 @@ const handleSubmit = (event) => {
   if (text === "") {
     return;
   }
-  fetch(`/api/videos/${videoId}/comment`, {
+  await fetch(`/api/videos/${videoId}/comment`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json", // 해당 post는 json이라고 미들웨어에게 알려주는 역할
     },
     body: JSON.stringify({
       text,
-      rating: "5",
     }),
   });
   textarea.value = "";

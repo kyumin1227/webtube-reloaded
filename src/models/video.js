@@ -11,7 +11,7 @@ const videoSchema = new mongoose.Schema({
     rating: { type: Number, default: 0, required: true },
   },
   owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" }, // 해당 오브젝트의 타입은 ObjectId 이며 해당 값은 User로 부터 옵니다.
-  comment: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 videoSchema.static("formatHashtags", function (hashtags) {
