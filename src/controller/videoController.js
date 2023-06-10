@@ -160,8 +160,6 @@ export const deleteComment = async (req, res) => {
     return res.sendStatus(404); // 404 보내고 페이지 끝내기
   }
 
-  console.log(comment);
-
   if (comment.owner.toString() == user._id) {
     // 코멘트 주인의 코멘트 배열 수정
     const user2 = await User.findById(comment.owner.toString());

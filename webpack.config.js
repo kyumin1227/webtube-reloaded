@@ -13,7 +13,7 @@ module.exports = {
     commentSection: BASE_JS + "commentSection.js",
   },
   mode: "development", // mode는 production(압축하여 한줄로 표현한 코드)과 development(알아보기 쉽게 코멘트 추가) 두가지가 있습니다.
-  watch: true, // file들이 변경될 때 마다 자동으로 확인하여 최신화 시켜줌 like nodemon
+  // watch: true, // file들이 변경될 때 마다 자동으로 확인하여 최신화 시켜줌 like nodemon (package.json 으로 이동)
   plugins: [
     new MiniCssExtractPlugin({
       filename: "css/style.css",
