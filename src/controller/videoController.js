@@ -77,6 +77,21 @@ export const deleteVideo = async (req, res) => {
     // 영상의 주인이 아닌 유저가 해당 영상을 수정하려고 할 때
     return res.status(404).redirect("/");
   }
+  const comments = video.comments;
+
+  comments.forEach(async (comment) => {
+    // 영상이 삭제되면 영상의 댓글과 해당 댓글을 단 주인의 댓글 목록에서도 삭제
+    const commentId = comment.toString();
+    const commentObj = await Comment.findById(commentId);
+    console.log("commentObj = " + commentObj);
+    const ownerId = commentObj.owner;
+    const owner = await User.findById(ownerId);
+    console.log("owner = " + owner);
+    owner.comments.pull(commentId);
+    owner.save();
+    Comment.findByIdAndDelete(commentId);
+  });
+
   await Video.findByIdAndDelete(id);
   return res.redirect("/");
 };
